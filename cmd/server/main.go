@@ -43,7 +43,7 @@ func main() {
 	r.GET("/ping", func(c *gin.Context) { c.String(200, "pong") })
 	products := r.Group("/products")
 	{
-		//products.GET(":id", productHandler.GetByID())
+		products.GET(":id", productHandler.GetByID())
 		products.POST("", productHandler.Post())
 		//products.DELETE(":id", productHandler.Delete())
 		//products.PATCH(":id", productHandler.Patch())

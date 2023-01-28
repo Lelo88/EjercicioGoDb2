@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+	"strconv"
 
 	"github.com/Lelo88/EjercicioGoDb2/internal/domain"
 	"github.com/Lelo88/EjercicioGoDb2/internal/productSQL"
@@ -16,6 +17,23 @@ type productSQLHandler struct {
 func NewProductSQLHandler(s productSQL.Service) *productSQLHandler {
 	return &productSQLHandler{
 		s,
+	}
+}
+
+func (sqlH *productSQLHandler) GetByID() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		idParam := c.Param("id")
+		id, err := strconv.Atoi(idParam)
+		if err != nil {
+			web.Failure(c, 400, errors.New("invalid id"))
+			return
+		}
+		product, err := sqlH.s.GetByID(id)
+		if err != nil {
+			web.Failure(c, 404, errors.New("product not found"))
+			return
+		}
+		web.Success(c, 200, product)
 	}
 }
 
