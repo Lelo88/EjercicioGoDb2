@@ -1,6 +1,10 @@
 package productSQL
 
-import "github.com/Lelo88/EjercicioGoDb2/internal/domain"
+import (
+	"errors"
+
+	"github.com/Lelo88/EjercicioGoDb2/internal/domain"
+)
 
 type Service interface{
 	Create(p domain.Product) (domain.Product, error)
@@ -19,12 +23,14 @@ func NewSqlService(r Repository) Service {
 
 func (s *service) Create(p domain.Product) (domain.Product, error) {
 	
-	_, err := s.r.Create(p)
+	errExiste := errors.New("esto ya existe")
 
 	if s.r.Exists(p.CodeValue) {
-		return domain.Product{}, err
+		return domain.Product{}, errExiste
 	}
 
+	err := s.r.Create(p)
+	
 	if err != nil {
 		return domain.Product{}, err
 	}

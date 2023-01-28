@@ -9,7 +9,7 @@ import (
 )
 
 type Repository interface {
-	Create(product domain.Product) (int, error)
+	Create(product domain.Product) (error)
 	Read(id int) (domain.Product, error)
 	Exists(code_value string) bool
 }
@@ -25,19 +25,19 @@ func NewSQLRepository(db *sql.DB) Repository{
 	}
 }
 
-func (r *repository) Create(product domain.Product) (int, error) {
+func (r *repository) Create(product domain.Product) (error) {
 
-	query:=`INSERT INTO products(name, quantity, code_value, is_published, expiration, price) 
-			VALUES (?,?,?,?,?,?);`
+	query:=`INSERT INTO products(id,name, quantity, code_value, is_published, expiration, price) 
+			VALUES (?,?,?,?,?,?,?);`
 
 	statement, err := r.db.Prepare(query)
 	if err!= nil {
-		return 0, err
+		return err
 	}
 
 	defer statement.Close()
 
-	result, err := statement.Exec(
+	result, err := statement.Exec(product.Id,
 								product.Name, 
 								product.Quantity, 
 								product.CodeValue, 
@@ -48,50 +48,42 @@ func (r *repository) Create(product domain.Product) (int, error) {
 	if err!= nil {
 		driverErr, ok := err.(*mysql.MySQLError)
         if !ok {
-            return 0, err
+            return err
         }
 		switch driverErr.Number {
         case 1062:
-            return 0, errors.New(driverErr.Message)
-        default:
-            return 0, errors.New("error por otra cosa")
-        }
+            return  errors.New(driverErr.Message)
+		default:
+			return  errors.New("error aca")
+		}
+		
 	}
 
 	rowsAffected , err := result.RowsAffected()
 
 	if err != nil{
-		return 0, err
+		return  errors.New("error1")
     }
 
 	if rowsAffected != 1 {
-		return 0, err
+		return  errors.New("error2")
 	}
 	
-	id, err := result.LastInsertId()
+	_, err = result.LastInsertId()
 	if err!= nil {
-		return 0, err
+		return  errors.New("error3")
 	}
-	product.Id = int(id)
-	return product.Id, nil
+	
+	return  nil
 }
 
 
 func (r *repository) Exists(code_value string) bool{
 	
-	var exists bool
-    var id int
-    query := "SELECT id FROM products WHERE code_value = ?;"
-    row := r.db.QueryRow(query, code_value)
-    err := row.Scan(&id)
-    if err != nil {
-        return false
-    }
-    if id > 0 {
-        exists = true
-		return exists
-    }
-    return exists
+	query := "SELECT card_number_id FROM buyers WHERE card_number_id=?;"
+	row := r.db.QueryRow(query, code_value)
+	err := row.Scan(&code_value)
+	return err == nil
 	
 }
 
