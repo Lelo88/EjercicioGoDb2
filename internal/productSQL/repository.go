@@ -8,7 +8,7 @@ import (
 )
 
 type Repository interface {
-	Create(product domain.Product) (int64, error)
+	Create(product domain.Product) (int, error)
 	Read()([]*domain.Product, error)
 }
 
@@ -17,13 +17,13 @@ type repository struct {
 	db *sql.DB
 }
 
-func NewRepository(db *sql.DB) Repository{
+func NewSQLRepository(db *sql.DB) Repository{
 	return &repository{
 		db,
 	}
 }
 
-func (r *repository) Create(product domain.Product) (int64, error) {
+func (r *repository) Create(product domain.Product) (int, error) {
 
 	query:=`INSERT INTO products(name, quantity, code_value, is_published, expiration, price) 
 			VALUES (?,?,?,?,?,?);`
@@ -51,7 +51,7 @@ func (r *repository) Create(product domain.Product) (int64, error) {
 		return 0, err
 	}
 
-	return int64(id), nil
+	return int(id), nil
 }
 
 func (r *repository) Read()([]*domain.Product, error) {
