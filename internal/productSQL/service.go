@@ -7,7 +7,7 @@ import (
 )
 
 type Service interface{
-	Create(p domain.Product) (domain.Product, error)
+	Create(p *domain.Product) (*domain.Product, error)
 	GetByID(id int) (domain.Product, error)
 }
 
@@ -21,19 +21,21 @@ func NewSqlService(r Repository) Service {
 	}
 }
 
-func (s *service) Create(p domain.Product) (domain.Product, error) {
+func (s *service) Create(p *domain.Product) (*domain.Product, error) {
 	
 	errExiste := errors.New("esto ya existe")
 
-	if s.r.Exists(p.CodeValue) {
-		return domain.Product{}, errExiste
+	
+
+	if s.r.Exists(p.CodeValue){
+		return p, errExiste
 	}
 
 	err := s.r.Create(p)
-	
-	if err != nil {
-		return domain.Product{}, err
+	if err!= nil {
+		return p,err
 	}
+
 	return p, nil
 	
 }

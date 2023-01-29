@@ -47,7 +47,7 @@ func (sqlH *productSQLHandler) Post() gin.HandlerFunc{
 			return
 		}
 
-		p, err := sqlH.s.Create(product)
+		p, err := sqlH.s.Create(&product)
 		if err != nil {
 			web.Failure(ctx, 400, err)
 			return
