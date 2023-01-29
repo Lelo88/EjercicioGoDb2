@@ -11,9 +11,10 @@ import (
 type Repository interface {
 	Create(product *domain.Product) (error)
 	Read(id int) (domain.Product, error)
+	ReadAll() ([]domain.Product, error)
 	Exists(code_value string) bool
 	Delete(id int) error
-
+	Update(product domain.Product) error
 }
 
 
@@ -36,7 +37,6 @@ func (r *repository) Create(product *domain.Product) (error) {
 	if err!= nil {
 		return  err
 	}
-
 
 	result,err := statement.Exec(
 								&product.Name, 
@@ -103,11 +103,56 @@ func (r *repository) Read(id int) (domain.Product, error){
 }
 
 func (r *repository) Update(product domain.Product) error{
+	query:= `UPDATE products SET name=?, quantity=?, code_value=?, is_published=?, expiration=?, price=? WHERE id=?;`
+	statement, err := r.db.Prepare(query)
 
+	if err!=nil {
+		return err
+	}
+
+	result, err := statement.Exec(&product.Name, 
+								&product.Quantity, 
+								&product.CodeValue, 
+								&product.IsPublished,
+								&product.Expiration, 
+								&product.Price)
+
+	if err!= nil {
+		return errors.New("error1")
+	}
+
+	_, err = result.RowsAffected()
+	if err != nil {
+		return errors.New("error2")
+	}
+	
 	return nil
+}
+
+func (r *repository) ReadAll() ([]domain.Product, error){
+	query:= `SELECT * FROM products`
+
+	rows, err := r.db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+
+	var producto []domain.Product
+
+	for rows.Next(){
+		prod := domain.Product{}
+		_ = rows.Scan(&prod.Id, &prod.Name, 
+						&prod.Quantity, &prod.CodeValue, 
+						&prod.IsPublished, &prod.Expiration, 
+						&prod.Price)
+		producto = append(producto, prod)
+	}
+
+	return producto,nil
 }
 
 func (r *repository) Delete(id int) error{
 
 	return nil
 }
+

@@ -55,3 +55,4 @@ func (sqlH *productSQLHandler) Post() gin.HandlerFunc{
 		web.Success(ctx, 201, p)
 	}
 }
+

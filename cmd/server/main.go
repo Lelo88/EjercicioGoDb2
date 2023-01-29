@@ -46,8 +46,8 @@ func main() {
 		products.GET(":id", productHandler.GetByID())
 		products.POST("", productHandler.Post())
 		//products.DELETE(":id", productHandler.Delete())
-		//products.PATCH(":id", productHandler.Patch())
-		//products.PUT(":id", productHandler.Put())
+		//products.PATCH("/:id", productHandler.Patch())
+		//products.PUT("/:id", productHandler.Put())
 	}
 
 	r.Run(":8080")
