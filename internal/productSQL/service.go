@@ -6,6 +6,9 @@ import (
 	"github.com/Lelo88/EjercicioGoDb2/internal/domain"
 )
 
+//Aca tendria que poner algunos errores comunes. 
+
+
 type Service interface{
 	Create(p *domain.Product) (*domain.Product, error)
 	GetByID(id int) (domain.Product, error)
@@ -25,8 +28,6 @@ func (s *service) Create(p *domain.Product) (*domain.Product, error) {
 	
 	errExiste := errors.New("esto ya existe")
 
-	
-
 	if s.r.Exists(p.CodeValue){
 		return p, errExiste
 	}
@@ -43,7 +44,7 @@ func (s *service) Create(p *domain.Product) (*domain.Product, error) {
 func (s *service) GetByID(id int) (domain.Product, error) {
 	p, err := s.r.Read(id)
 	if err != nil {
-		return domain.Product{}, err
+		return domain.Product{}, errors.New("este producto no existe")
 	}
 	return p, nil
 
