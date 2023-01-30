@@ -12,7 +12,7 @@ import (
 type Service interface{
 	Create(p *domain.Product) (*domain.Product, error)
 	GetByID(id int) (domain.Product, error)
-	Update(id int, p domain.Product) (domain.Product,error)
+	Update(id int, p domain.Product) (error)
 }
 
 type service struct{
@@ -51,19 +51,36 @@ func (s *service) GetByID(id int) (domain.Product, error) {
 
 }
 
-func (s *service) Update(id int, p domain.Product) (domain.Product,error){
+func (s *service) Update(id int, p domain.Product) (error){
 
 	product,_ := s.GetByID(id)
 
 	if s.r.Exists(p.CodeValue) && product.CodeValue!=p.CodeValue{
-		return domain.Product{}, errors.New("este codigo de producto ya existe")
+		return errors.New("este codigo de producto ya existe")
 	}
 
-	err := s.r.Update(p)
+	if p.Name != "" {
+		product.Name = p.Name
+	}
+	if p.CodeValue != "" {
+		product.CodeValue = p.CodeValue
+	}
+	if p.Expiration != "" {
+		product.Expiration = p.Expiration
+	}
+	if p.Quantity > 0 {
+		product.Quantity = p.Quantity
+	}
+	if p.Price > 0 {
+		product.Price = p.Price
+	}
+
+
+	err := s.r.Update(product)
 
 	if err!= nil {
-		return domain.Product{}, errors.New("no se puede actualizar el producto")
+		return  errors.New("no se puede actualizar el producto")
 	}
 
-	return p, nil
+	return  nil
 }

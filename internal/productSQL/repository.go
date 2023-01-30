@@ -103,7 +103,7 @@ func (r *repository) Read(id int) (domain.Product, error){
 }
 
 func (r *repository) Update(product domain.Product) error{
-	query:= `UPDATE products SET name=?, quantity=?, code_value=?, is_published=?, expiration=?, price=? WHERE id=?;`
+	query:= `UPDATE products SET name=?, quantity=?, code_value=?, is_published=?, expiration=?, price=? WHERE id=?`
 	statement, err := r.db.Prepare(query)
 
 	if err!=nil {
@@ -115,17 +115,22 @@ func (r *repository) Update(product domain.Product) error{
 								&product.CodeValue, 
 								&product.IsPublished,
 								&product.Expiration, 
-								&product.Price)
+								&product.Price,
+								&product.Id)
 
 	if err!= nil {
 		return errors.New("error1")
 	}
 
-	_, err = result.RowsAffected()
+	rowsAffected, err := result.RowsAffected()
 	if err != nil {
 		return errors.New("error2")
 	}
-	
+
+	if rowsAffected!=1{
+		return errors.New("no se actualiza nada")
+	}
+
 	return nil
 }
 

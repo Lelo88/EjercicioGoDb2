@@ -56,3 +56,38 @@ func (sqlH *productSQLHandler) Post() gin.HandlerFunc{
 	}
 }
 
+func (sqlH *productSQLHandler) Put() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		idParam := ctx.Param("id")
+		
+		id, err := strconv.Atoi(idParam)
+		if err != nil {
+			web.Failure(ctx, 400, errors.New("invalid id"))
+			return
+		}
+
+		_, err = sqlH.s.GetByID(id)
+		if err != nil {
+			web.Failure(ctx, 404, errors.New("product not found"))
+			return
+		}
+		if err != nil {
+			web.Failure(ctx, 409, err)
+			return
+		}
+		var product domain.Product
+		err = ctx.ShouldBindJSON(&product)
+		if err != nil {
+			web.Failure(ctx, 400, errors.New("invalid json"))
+			return
+		}
+		err = sqlH.s.Update(id, product)
+		if err != nil {
+			web.Failure(ctx, 409, errors.New("error en handler2"))
+			return
+		}
+		product.Id = id
+		web.Success(ctx, 200, product)
+	}
+}
+
