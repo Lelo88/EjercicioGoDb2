@@ -44,6 +44,7 @@ func main() {
 	products := r.Group("/products")
 	{
 		products.GET(":id", productHandler.GetByID())
+		products.GET("",productHandler.Getall())
 		products.POST("", productHandler.Post())
 		//products.DELETE(":id", productHandler.Delete())
 		//products.PATCH("/:id", productHandler.Patch())

@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+	"net/http"
 	"strconv"
 
 	"github.com/Lelo88/EjercicioGoDb2/internal/domain"
@@ -34,6 +35,17 @@ func (sqlH *productSQLHandler) GetByID() gin.HandlerFunc {
 			return
 		}
 		web.Success(c, 200, product)
+	}
+}
+
+func (sqlH *productSQLHandler) Getall() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		products, err := sqlH.s.GetAll()
+		if err!= nil {
+			web.Failure(ctx, http.StatusInternalServerError, err)
+			return
+		}
+		web.Success(ctx, http.StatusOK, products)
 	}
 }
 
