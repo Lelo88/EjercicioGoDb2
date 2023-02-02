@@ -41,7 +41,7 @@ func (s *service) Create(p *domain.Product) (*domain.Product, error) {
 
 	err := s.r.Create(p)
 	if err!= nil {
-		return p,err
+		return p,ErrDatabaseNotFound
 	}
 
 	return p, nil
@@ -51,7 +51,7 @@ func (s *service) Create(p *domain.Product) (*domain.Product, error) {
 func (s *service) GetByID(id int) (domain.Product, error) {
 	p, err := s.r.Read(id)
 	if err != nil {
-		return domain.Product{}, errors.New("este producto no existe")
+		return domain.Product{}, ErrNotFound
 	}
 	return p, nil
 

@@ -85,3 +85,14 @@ func TestGetByIDOK(t *testing.T){
 	assert.Equal(t, dummyInBBDD, product)
 	
 }
+
+func TestGetByIDFail(t *testing.T){
+	ser := createTestService(dummyRepo{
+		GetProduct: dummyInBBDD,
+		Err: ErrNotFound,
+	})
+
+	product, err := ser.GetByID(2)
+	assert.Error(t, err)
+	assert.NotEqual(t, dummyInBBDD, product)
+}
