@@ -74,6 +74,10 @@ var dummyInBBDD2 = domain.Product{
 	Price: 11.11,
 }
 
+var dummyProducts = []domain.Product{
+	dummyInBBDD, dummyInBBDD2,
+}
+
 func TestGetByIDOK(t *testing.T){
 	ser := createTestService(dummyRepo{
 		GetProduct: dummyInBBDD,
@@ -96,3 +100,15 @@ func TestGetByIDFail(t *testing.T){
 	assert.Error(t, err)
 	assert.NotEqual(t, dummyInBBDD, product)
 }
+
+func TestGetAllOK(t *testing.T){
+	ser:= createTestService(dummyRepo{
+		Products: dummyProducts,
+		Err: nil,
+	})
+
+	products, err := ser.GetAll()
+	assert.NoError(t, err)
+	assert.Equal(t, dummyProducts, products)
+}
+
