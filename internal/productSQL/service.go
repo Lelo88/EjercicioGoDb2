@@ -8,11 +8,16 @@ import (
 
 //Aca tendria que poner algunos errores comunes. 
 
+var (
+	ErrDatabaseNotFound = errors.New("database not found")
+)
+
 
 type Service interface{
 	Create(p *domain.Product) (*domain.Product, error)
 	GetByID(id int) (domain.Product, error)
 	Update(id int, p domain.Product) (error)
+	GetAll() ([]domain.Product, error)
 }
 
 type service struct{
@@ -83,4 +88,14 @@ func (s *service) Update(id int, p domain.Product) (error){
 	}
 
 	return  nil
+}
+
+func (s *service) GetAll() ([]domain.Product, error){
+
+	products , err := s.r.ReadAll()
+	if err!= nil {
+		return []domain.Product{}, ErrDatabaseNotFound
+	}
+
+	return products, nil
 }
