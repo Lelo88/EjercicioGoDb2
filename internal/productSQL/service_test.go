@@ -98,6 +98,7 @@ func TestGetByIDFail(t *testing.T){
 
 	product, err := ser.GetByID(2)
 	assert.Error(t, err)
+	assert.Equal(t, ErrNotFound, err)
 	assert.NotEqual(t, dummyInBBDD, product)
 }
 
@@ -110,5 +111,17 @@ func TestGetAllOK(t *testing.T){
 	products, err := ser.GetAll()
 	assert.NoError(t, err)
 	assert.Equal(t, dummyProducts, products)
+}
+
+func TestGetAllFail(t *testing.T){
+	ser:= createTestService(dummyRepo{
+		Products: dummyProducts,
+		Err: ErrDatabaseNotFound,
+	})
+
+	products, err := ser.GetAll()
+	assert.Error(t, err)
+	assert.Equal(t, ErrDatabaseNotFound,err)
+	assert.NotEqual(t, dummyProducts, products)
 }
 
