@@ -19,6 +19,7 @@ type Service interface{
 	GetByID(id int) (domain.Product, error)
 	Update(id int, p domain.Product) (error)
 	GetAll() ([]domain.Product, error)
+	Delete(id int) (error)
 }
 
 type service struct{
@@ -99,4 +100,18 @@ func (s *service) GetAll() ([]domain.Product, error){
 	}
 
 	return products, nil
+}
+
+func (s *service) Delete(id int) error{
+	
+	err := s.r.Delete(id)
+
+	switch err {
+		case ErrNotFound:
+			return ErrNotFound
+		case ErrDatabaseNotFound:
+			return ErrDatabaseNotFound
+	}
+
+	return nil
 }

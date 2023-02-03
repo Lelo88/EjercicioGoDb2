@@ -166,13 +166,13 @@ func (r *repository) Delete(id int) error{
 
 	res, err := statement.Exec(id)
 	if err!= nil {
-		return err
+		return ErrDatabaseNotFound
 	}
 
 	affect, err := res.RowsAffected()
 
 	if err!= nil {
-		return err
+		return ErrDatabaseNotFound
 	}
 
 	if affect <1{
