@@ -157,6 +157,27 @@ func (r *repository) ReadAll() ([]domain.Product, error){
 }
 
 func (r *repository) Delete(id int) error{
+	query:= `DELETE FROM products WHERE id =?`
+	statement, err := r.db.Prepare(query)
+
+	if err != nil {
+		return err
+	}
+
+	res, err := statement.Exec(id)
+	if err!= nil {
+		return err
+	}
+
+	affect, err := res.RowsAffected()
+
+	if err!= nil {
+		return err
+	}
+
+	if affect <1{
+		return ErrNotFound
+	}
 
 	return nil
 }
