@@ -103,3 +103,22 @@ func (sqlH *productSQLHandler) Put() gin.HandlerFunc {
 	}
 }
 
+func (sqlH *productSQLHandler) Delete() gin.HandlerFunc{
+	return func(ctx *gin.Context) {
+		idParam := ctx.Param("id")
+		id, err := strconv.Atoi(idParam)
+		if err!= nil {
+			web.Failure(ctx, 400, errors.New("invalid id"))
+			return
+		}
+		
+		err = sqlH.s.Delete(id)
+		if err!= nil {
+			web.Failure(ctx,404,err)
+			return
+		}
+
+		web.Success(ctx, 204, "id deleted")
+	}
+}
+
