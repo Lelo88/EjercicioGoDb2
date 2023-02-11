@@ -15,7 +15,7 @@ var (
 
 
 type Service interface{
-	Create(p *domain.Product) (*domain.Product, error)
+	Create(p domain.Product) (domain.Product, error)
 	GetByID(id int) (domain.Product, error)
 	Update(id int, p domain.Product) (error)
 	GetAll() ([]domain.Product, error)
@@ -32,7 +32,7 @@ func NewSqlService(r Repository) Service {
 	}
 }
 
-func (s *service) Create(p *domain.Product) (*domain.Product, error) {
+func (s *service) Create(p domain.Product) (domain.Product, error) {
 	
 	errExiste := errors.New("esto ya existe")
 

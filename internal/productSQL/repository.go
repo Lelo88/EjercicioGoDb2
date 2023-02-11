@@ -5,11 +5,12 @@ import (
 	"errors"
 
 	"github.com/Lelo88/EjercicioGoDb2/internal/domain"
+	"github.com/go-sql-driver/mysql"
 	//"github.com/go-sql-driver/mysql"
 )
 
 type Repository interface {
-	Create(product *domain.Product) (error)
+	Create(product domain.Product) (error)
 	Read(id int) (domain.Product, error)
 	ReadAll() ([]domain.Product, error)
 	Exists(code_value string) bool
@@ -28,15 +29,17 @@ func NewSQLRepository(db *sql.DB) Repository{
 	}
 }
 
-func (r *repository) Create(product *domain.Product) (error) {
+func (r *repository) Create(product domain.Product) (err error) {
 
 	query:=`INSERT INTO products(name,quantity,code_value,is_published,expiration,price) 
 			VALUES (?,?,?,?,?,?);`
 
 	statement, err := r.db.Prepare(query)
 	if err!= nil {
-		return  err
+		return 
 	}
+
+	defer statement.Close()
 
 	result,err := statement.Exec(
 								&product.Name, 
@@ -47,18 +50,26 @@ func (r *repository) Create(product *domain.Product) (error) {
 								&product.Price)
 
 	if err!=nil{
+		driverErr, ok := err.(*mysql.MySQLError)
+		if !ok {
+			err = errors.New("error internal")
+			return err 
+		}
+
+		switch driverErr.Number {
+		case 1062:
+			err = errors.New("error duplicated")
+		default:
+			err = errors.New("error internal")
+		}
 		return err
 	}
 
 	rowsAffected , err := result.RowsAffected()
 
-	if err != nil{
+	if err != nil || rowsAffected != 1 {
 		return  errors.New("error1")
     }
-
-	if rowsAffected < 1 {
-		return  errors.New("error2")
-	}
 	
 	id, err := result.LastInsertId()
 	if err!= nil {
@@ -67,7 +78,7 @@ func (r *repository) Create(product *domain.Product) (error) {
 	
 	product.Id = int(id)
 
-	return  nil
+	return 
 }
 
 

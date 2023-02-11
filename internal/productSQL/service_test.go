@@ -30,7 +30,7 @@ func (dumm dummyRepo) ReadAll() ([]domain.Product, error) {
 	return dumm.Products, dumm.Err
 }
 
-func (dumm dummyRepo) Create(p *domain.Product) error {
+func (dumm dummyRepo) Create(p domain.Product) error {
 	return dumm.Err
 }
 
