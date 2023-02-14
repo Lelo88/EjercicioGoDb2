@@ -23,7 +23,7 @@ type Service interface{
 }
 
 type service struct{
-	 r Repository
+	r Repository
 }
 
 func NewSqlService(r Repository) Service {
