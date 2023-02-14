@@ -10,7 +10,7 @@ import (
 )
 
 type Repository interface {
-	Create(product domain.Product) (error)
+	Create(product domain.Product) error
 	Read(id int) (domain.Product, error)
 	ReadAll() ([]domain.Product, error)
 	Exists(code_value string) bool
@@ -18,42 +18,41 @@ type Repository interface {
 	Update(product domain.Product) error
 }
 
-
 type repository struct {
 	db *sql.DB
 }
 
-func NewSQLRepository(db *sql.DB) Repository{
+func NewSQLRepository(db *sql.DB) Repository {
 	return &repository{
-		db:db,
+		db: db,
 	}
 }
 
 func (r *repository) Create(product domain.Product) (err error) {
 
-	query:=`INSERT INTO products(name,quantity,code_value,is_published,expiration,price) 
+	query := `INSERT INTO products(name,quantity,code_value,is_published,expiration,price) 
 			VALUES (?,?,?,?,?,?);`
 
 	statement, err := r.db.Prepare(query)
-	if err!= nil {
-		return 
+	if err != nil {
+		return
 	}
 
 	defer statement.Close()
 
-	result,err := statement.Exec(
-								&product.Name, 
-								&product.Quantity, 
-								&product.CodeValue, 
-								&product.IsPublished, 
-								&product.Expiration, 
-								&product.Price)
+	result, err := statement.Exec(
+		&product.Name,
+		&product.Quantity,
+		&product.CodeValue,
+		&product.IsPublished,
+		&product.Expiration,
+		&product.Price)
 
-	if err!=nil{
+	if err != nil {
 		driverErr, ok := err.(*mysql.MySQLError)
 		if !ok {
 			err = errors.New("error internal")
-			return err 
+			return err
 		}
 
 		switch driverErr.Number {
@@ -65,71 +64,70 @@ func (r *repository) Create(product domain.Product) (err error) {
 		return err
 	}
 
-	rowsAffected , err := result.RowsAffected()
+	rowsAffected, err := result.RowsAffected()
 
 	if err != nil || rowsAffected != 1 {
-		return  errors.New("error1")
-    }
-	
-	id, err := result.LastInsertId()
-	if err!= nil {
-		return  errors.New("error3")
+		return errors.New("error1")
 	}
-	
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		return errors.New("error3")
+	}
+
 	product.Id = int(id)
 
-	return 
+	return
 }
 
+func (r *repository) Exists(code_value string) bool {
 
-func (r *repository) Exists(code_value string) bool{
-	
 	query := "SELECT code_value FROM products WHERE code_value=?;"
 	row := r.db.QueryRow(query, code_value)
 	err := row.Scan(&code_value)
-	return err==nil
-	
+	return err == nil
+
 }
 
-func (r *repository) Read(id int) (domain.Product, error){
-	
+func (r *repository) Read(id int) (domain.Product, error) {
+
 	var product domain.Product
 
 	query := "SELECT * FROM products WHERE id = ?;"
-	
-	row := r.db.QueryRow(query, id)
-	err := row.Scan(&product.Id, 
-					&product.Name, 
-					&product.Quantity,
-					&product.CodeValue,
-					&product.IsPublished,
-					&product.Expiration,
-					&product.Price)
 
-	if err!= nil {
+	row := r.db.QueryRow(query, id)
+	err := row.Scan(&product.Id,
+		&product.Name,
+		&product.Quantity,
+		&product.CodeValue,
+		&product.IsPublished,
+		&product.Expiration,
+		&product.Price)
+
+	if err != nil {
 		return domain.Product{}, err
 	}
-	
-	return product,nil
+
+	return product, nil
 }
 
-func (r *repository) Update(product domain.Product) error{
-	query:= `UPDATE products SET name=?, quantity=?, code_value=?, is_published=?, expiration=?, price=? WHERE id=?`
+func (r *repository) Update(product domain.Product) error {
+	query := `UPDATE products SET name=?, quantity=?, code_value=?, is_published=?, expiration=?, price=? WHERE id=?`
 	statement, err := r.db.Prepare(query)
 
-	if err!=nil {
+	if err != nil {
 		return err
 	}
 
-	result, err := statement.Exec(&product.Name, 
-								&product.Quantity, 
-								&product.CodeValue, 
-								&product.IsPublished,
-								&product.Expiration, 
-								&product.Price,
-								&product.Id)
+	result, err := statement.Exec(&product.Name,
+		&product.Quantity,
+		&product.CodeValue,
+		&product.IsPublished,
+		&product.Expiration,
+		&product.Price,
+		&product.Id)
 
-	if err!= nil {
+	if err != nil {
 		return errors.New("error1")
 	}
 
@@ -138,15 +136,15 @@ func (r *repository) Update(product domain.Product) error{
 		return errors.New("error2")
 	}
 
-	if rowsAffected!=1{
+	if rowsAffected != 1 {
 		return errors.New("no se actualiza nada")
 	}
 
 	return nil
 }
 
-func (r *repository) ReadAll() ([]domain.Product, error){
-	query:= `SELECT * FROM products`
+func (r *repository) ReadAll() ([]domain.Product, error) {
+	query := `Select * from products`
 
 	rows, err := r.db.Query(query)
 	if err != nil {
@@ -155,20 +153,20 @@ func (r *repository) ReadAll() ([]domain.Product, error){
 
 	var producto []domain.Product
 
-	for rows.Next(){
+	for rows.Next() {
 		prod := domain.Product{}
-		_ = rows.Scan(&prod.Id, &prod.Name, 
-						&prod.Quantity, &prod.CodeValue, 
-						&prod.IsPublished, &prod.Expiration, 
-						&prod.Price)
+		_ = rows.Scan(&prod.Id, &prod.Name,
+			&prod.Quantity, &prod.CodeValue,
+			&prod.IsPublished, &prod.Expiration,
+			&prod.Price)
 		producto = append(producto, prod)
 	}
 
-	return producto,nil
+	return producto, nil
 }
 
-func (r *repository) Delete(id int) error{
-	query:= `DELETE FROM products WHERE id =?`
+func (r *repository) Delete(id int) error {
+	query := `DELETE FROM products WHERE id =?`
 	statement, err := r.db.Prepare(query)
 
 	if err != nil {
@@ -176,20 +174,19 @@ func (r *repository) Delete(id int) error{
 	}
 
 	res, err := statement.Exec(id)
-	if err!= nil {
+	if err != nil {
 		return ErrDatabaseNotFound
 	}
 
 	affect, err := res.RowsAffected()
 
-	if err!= nil {
+	if err != nil {
 		return ErrDatabaseNotFound
 	}
 
-	if affect <1{
+	if affect < 1 {
 		return ErrNotFound
 	}
 
 	return nil
 }
-
