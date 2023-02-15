@@ -170,3 +170,24 @@ func TestRepository_Read(t *testing.T) {
 		//assert.NoError(t, mock.ExpectationsWereMet())
 	})
 }
+
+func TestRepository_Delete(t *testing.T) {
+
+	db, mock, err := sqlmock.New()
+	assert.NoError(t, err)
+
+	defer db.Close()
+
+	rep := NewSQLRepository(db)
+
+	query := "DELETE FROM products WHERE id =?"
+
+	t.Run("Delete Product", func(t *testing.T) {
+
+		mock.ExpectPrepare(regexp.QuoteMeta(query)).ExpectExec().WillReturnResult(sqlmock.NewResult(1, 1))
+
+		err := rep.Delete(1)
+		assert.NoError(t, err)
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
+}

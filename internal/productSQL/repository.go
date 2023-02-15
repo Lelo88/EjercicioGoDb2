@@ -176,7 +176,7 @@ func (r *repository) ReadAll() ([]domain.Product, error) {
 }
 
 func (r *repository) Delete(id int) error {
-	query := `DELETE FROM products WHERE id =?`
+	query := "DELETE FROM products WHERE id =?"
 	statement, err := r.db.Prepare(query)
 
 	if err != nil {
