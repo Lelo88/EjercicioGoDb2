@@ -215,4 +215,7 @@ func TestRepository_Delete(t *testing.T) {
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 
+	t.Run("Error Internal RowsAffected", func(t *testing.T) {
+
+	})
 }
