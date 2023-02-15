@@ -216,6 +216,6 @@ func TestRepository_Delete(t *testing.T) {
 	})
 
 	t.Run("Error Internal RowsAffected", func(t *testing.T) {
-		mock.ExpectPrepare()
+		mock.ExpectPrepare(regexp.QuoteMeta(query))
 	})
 }
