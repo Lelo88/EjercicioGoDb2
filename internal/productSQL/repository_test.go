@@ -112,5 +112,36 @@ func TestRepository_ReadAll(t *testing.T) {
 }
 
 func TestRepository_Read(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	assert.NoError(t, err)
+
+	defer db.Close()
+
+	dbExpected := domain.Product{
+		Id:          1,
+		Name:        "Milanesa",
+		Quantity:    12,
+		CodeValue:   "abc123",
+		IsPublished: true,
+		Expiration:  "2002-12-12",
+		Price:       123.12,
+	}
+
+	row := mock.NewRows([]string{"id", "name", "quantity", "code_value", "is_published", "expiration", "price"})
+	row.AddRow(dbExpected.Id, dbExpected.Name, dbExpected.Quantity, dbExpected.CodeValue, dbExpected.IsPublished, dbExpected.Expiration, dbExpected.Price)
+
+	rep := NewSQLRepository(db)
+
+	query := "SELECT * FROM products WHERE id = ?;"
+
+	t.Run("Get Product By ID OK", func(t *testing.T) {
+		mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnRows(row)
+
+		product, err := rep.Read(1)
+
+		assert.NoError(t, err)
+		assert.Equal(t, product, dbExpected)
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
 
 }
