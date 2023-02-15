@@ -190,4 +190,15 @@ func TestRepository_Delete(t *testing.T) {
 		assert.NoError(t, err)
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
+
+	t.Run("ErrInternal Prepare on Delete Method", func(t *testing.T) {
+		mock.ExpectPrepare(regexp.QuoteMeta(query)).WillReturnError(ErrInternal)
+
+		err := rep.Delete(1)
+
+		assert.Error(t, err)
+		assert.Equal(t, ErrInternal, err)
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
+
 }

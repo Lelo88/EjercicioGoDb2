@@ -180,7 +180,7 @@ func (r *repository) Delete(id int) error {
 	statement, err := r.db.Prepare(query)
 
 	if err != nil {
-		return err
+		return ErrInternal
 	}
 
 	res, err := statement.Exec(id)
