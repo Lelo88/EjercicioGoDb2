@@ -1,6 +1,7 @@
 package productSQL
 
 import (
+	"database/sql"
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/Lelo88/EjercicioGoDb2/internal/domain"
 	"github.com/stretchr/testify/assert"
@@ -144,4 +145,28 @@ func TestRepository_Read(t *testing.T) {
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 
+	t.Run("GetById ErrNotFound", func(t *testing.T) {
+		mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnError(sql.ErrNoRows)
+
+		product, err := rep.Read(1)
+
+		assert.Error(t, err)
+		assert.Equal(t, ErrNotFound, err)
+		assert.Empty(t, product, product)
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
+
+	t.Run("GetByID ErrorInternal", func(t *testing.T) {
+		// arrange
+		mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnError(ErrInternal)
+
+		// act
+		buyer, err := rep.Read(1)
+
+		// assert
+		assert.Error(t, err)
+		assert.Equal(t, ErrInternal, err)
+		assert.Empty(t, buyer, buyer)
+		//assert.NoError(t, mock.ExpectationsWereMet())
+	})
 }

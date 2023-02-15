@@ -105,13 +105,16 @@ func (r *repository) Read(id int) (domain.Product, error) {
 		&product.Price)
 
 	if err != nil {
+
 		switch err {
 		case sql.ErrNoRows:
 			return domain.Product{}, ErrNotFound
 		default:
 			return domain.Product{}, ErrInternal
 		}
+
 	}
+
 	return product, nil
 }
 
