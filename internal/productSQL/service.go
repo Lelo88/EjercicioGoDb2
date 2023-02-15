@@ -6,23 +6,23 @@ import (
 	"github.com/Lelo88/EjercicioGoDb2/internal/domain"
 )
 
-//Aca tendria que poner algunos errores comunes. 
+//Aca tendria que poner algunos errores comunes.
 
 var (
 	ErrDatabaseNotFound = errors.New("database not found")
-	ErrNotFound = errors.New("product not found")
+	ErrNotFound         = errors.New("product not found")
+	ErrInternal         = errors.New("internal error")
 )
 
-
-type Service interface{
+type Service interface {
 	Create(p domain.Product) (domain.Product, error)
 	GetByID(id int) (domain.Product, error)
-	Update(id int, p domain.Product) (error)
+	Update(id int, p domain.Product) error
 	GetAll() ([]domain.Product, error)
-	Delete(id int) (error)
+	Delete(id int) error
 }
 
-type service struct{
+type service struct {
 	r Repository
 }
 
@@ -33,20 +33,18 @@ func NewSqlService(r Repository) Service {
 }
 
 func (s *service) Create(p domain.Product) (domain.Product, error) {
-	
-	errExiste := errors.New("esto ya existe")
 
-	if s.r.Exists(p.CodeValue){
-		return p, errExiste
+	if s.r.Exists(p.CodeValue) {
+		return p, ErrInternal
 	}
 
 	err := s.r.Create(p)
-	if err!= nil {
-		return p,ErrDatabaseNotFound
+	if err != nil {
+		return p, ErrDatabaseNotFound
 	}
 
 	return p, nil
-	
+
 }
 
 func (s *service) GetByID(id int) (domain.Product, error) {
@@ -58,11 +56,11 @@ func (s *service) GetByID(id int) (domain.Product, error) {
 
 }
 
-func (s *service) Update(id int, p domain.Product) (error){
+func (s *service) Update(id int, p domain.Product) error {
 
-	product,_ := s.GetByID(id)
+	product, _ := s.GetByID(id)
 
-	if s.r.Exists(p.CodeValue) && product.CodeValue!=p.CodeValue{
+	if s.r.Exists(p.CodeValue) && product.CodeValue != p.CodeValue {
 		return errors.New("este codigo de producto ya existe")
 	}
 
@@ -82,35 +80,34 @@ func (s *service) Update(id int, p domain.Product) (error){
 		product.Price = p.Price
 	}
 
-
 	err := s.r.Update(product)
 
-	if err!= nil {
-		return  errors.New("no se puede actualizar el producto")
+	if err != nil {
+		return errors.New("no se puede actualizar el producto")
 	}
 
-	return  nil
+	return nil
 }
 
-func (s *service) GetAll() ([]domain.Product, error){
+func (s *service) GetAll() ([]domain.Product, error) {
 
-	products , err := s.r.ReadAll()
-	if err!= nil {
+	products, err := s.r.ReadAll()
+	if err != nil {
 		return []domain.Product{}, ErrDatabaseNotFound
 	}
 
 	return products, nil
 }
 
-func (s *service) Delete(id int) error{
-	
+func (s *service) Delete(id int) error {
+
 	err := s.r.Delete(id)
 
 	switch err {
-		case ErrNotFound:
-			return ErrNotFound
-		case ErrDatabaseNotFound:
-			return ErrDatabaseNotFound
+	case ErrNotFound:
+		return ErrNotFound
+	case ErrDatabaseNotFound:
+		return ErrDatabaseNotFound
 	}
 
 	return nil

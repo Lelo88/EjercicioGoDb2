@@ -54,4 +54,63 @@ func TestRepository_ReadAll(t *testing.T) {
 		assert.Equal(t, dbExpected, products)
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
+
+	t.Run("Read All Products InternalError", func(t *testing.T) {
+		mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnError(ErrDatabaseNotFound)
+
+		products, err := rep.ReadAll()
+
+		assert.Error(t, err)
+		assert.Empty(t, products, products)
+		assert.Equal(t, ErrInternal, err)
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
+
+	t.Run("Read All Products Scan Internal Error", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+
+		defer db.Close()
+
+		dbExpected := []domain.Product{
+			{
+				Id:          1,
+				Name:        "Milanesa",
+				Quantity:    12,
+				CodeValue:   "abc123",
+				IsPublished: true,
+				Expiration:  "2002-12-12",
+			},
+			{
+				Id:          2,
+				Name:        "Papas",
+				Quantity:    13,
+				CodeValue:   "abcaasd",
+				IsPublished: true,
+				Expiration:  "2002-1-12",
+			},
+		}
+		rows := mock.NewRows([]string{"id", "name", "quantity", "code_value", "is_published", "expiration"})
+
+		for _, data := range dbExpected {
+			rows.AddRow(data.Id, data.Name, data.Quantity, data.CodeValue, data.IsPublished, data.Expiration)
+		}
+		rep := NewSQLRepository(db)
+		//ctx := context.Background()
+
+		query := "Select * from products"
+
+		mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnRows(rows)
+
+		products, err := rep.ReadAll()
+
+		assert.Error(t, err)
+		assert.Equal(t, ErrInternal, err)
+		assert.Empty(t, products, products)
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
+}
+
+func TestRepository_Read(t *testing.T) {
+
 }

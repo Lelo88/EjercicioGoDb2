@@ -35,7 +35,7 @@ func (r *repository) Create(product domain.Product) (err error) {
 
 	statement, err := r.db.Prepare(query)
 	if err != nil {
-		return
+		return ErrInternal
 	}
 
 	defer statement.Close()
@@ -148,17 +148,20 @@ func (r *repository) ReadAll() ([]domain.Product, error) {
 
 	rows, err := r.db.Query(query)
 	if err != nil {
-		return nil, err
+		return []domain.Product{}, ErrInternal
 	}
 
 	var producto []domain.Product
 
 	for rows.Next() {
 		prod := domain.Product{}
-		_ = rows.Scan(&prod.Id, &prod.Name,
+		err := rows.Scan(&prod.Id, &prod.Name,
 			&prod.Quantity, &prod.CodeValue,
 			&prod.IsPublished, &prod.Expiration,
 			&prod.Price)
+		if err != nil {
+			return []domain.Product{}, ErrInternal
+		}
 		producto = append(producto, prod)
 	}
 
