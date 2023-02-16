@@ -222,5 +222,6 @@ func TestRepository_Delete(t *testing.T) {
 
 		//aca me quede
 		assert.Error(t, err)
+		assert.Equal(t, err, ErrInternal)
 	})
 }
