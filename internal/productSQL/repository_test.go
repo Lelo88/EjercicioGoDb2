@@ -220,6 +220,7 @@ func TestRepository_Delete(t *testing.T) {
 
 		err := rep.Delete(1)
 
+		//aca me quede
 		assert.Error(t, err)
 	})
 }
