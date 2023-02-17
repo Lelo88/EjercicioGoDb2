@@ -51,7 +51,7 @@ func (r *repository) Create(product domain.Product) (err error) {
 	if err != nil {
 		driverErr, ok := err.(*mysql.MySQLError)
 		if !ok {
-			err = errors.New("error internal")
+			err = ErrDatabaseNotFound
 			return err
 		}
 
