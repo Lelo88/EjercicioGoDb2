@@ -242,5 +242,21 @@ func TestRepositoryCreate(t *testing.T){
 	db, mock, err := sqlmock.New()
 	assert.NoError(t, err)
 
+	defer db.Close()
+
+	query := "INSERT INTO products(name,quantity,code_value,is_published,expiration,price) VALUES (?,?,?,?,?,?);"
+	t.Run("create ok", func(t *testing.T) {
+
+		product := domain.Product{Name: "Milanesa", Quantity: 10, CodeValue: "12345", IsPublished: true, Expiration: "2023/12/12", Price: 12.2}
+		//expected :=1 
+
+		mock.ExpectPrepare(regexp.QuoteMeta(query)).ExpectExec().WithArgs(product.Name, product.Quantity, product.CodeValue, product.IsPublished, product.Expiration, product.Price).WillReturnResult(sqlmock.NewResult(1,1,))
 	
+		rep := NewSQLRepository(db)
+		
+		err := rep.Create(product)
+
+		assert.NoError(t, err)
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
 }
