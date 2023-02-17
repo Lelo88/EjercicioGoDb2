@@ -12,6 +12,7 @@ var (
 	ErrDatabaseNotFound = errors.New("database not found")
 	ErrNotFound         = errors.New("product not found")
 	ErrInternal         = errors.New("internal error")
+	ErrDuplicate        = errors.New("duplicate entry")
 )
 
 type Service interface {

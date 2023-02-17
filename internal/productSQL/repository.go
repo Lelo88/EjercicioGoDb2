@@ -57,9 +57,9 @@ func (r *repository) Create(product domain.Product) (err error) {
 
 		switch driverErr.Number {
 		case 1062:
-			err = errors.New("error duplicated")
+			err = ErrDuplicate
 		default:
-			err = errors.New("error internal")
+			err = ErrInternal
 		}
 		return err
 	}

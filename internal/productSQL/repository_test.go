@@ -237,3 +237,10 @@ func TestRepository_Delete(t *testing.T) {
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 }
+
+func TestRepositoryCreate(t *testing.T){
+	db, mock, err := sqlmock.New()
+	assert.NoError(t, err)
+
+	
+}
