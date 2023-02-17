@@ -216,13 +216,24 @@ func TestRepository_Delete(t *testing.T) {
 	})
 
 	t.Run("Error Internal RowsAffected", func(t *testing.T) {
-		mock.ExpectPrepare(regexp.QuoteMeta(query)).ExpectExec().WithArgs(1).WillReturnError(ErrInternal)
+		mock.ExpectPrepare(regexp.QuoteMeta(query)).ExpectExec().WithArgs(1).WillReturnResult(sqlmock.NewResult(1,0))
 
 		err := rep.Delete(1)
 
 		//aca me quede
 		assert.Error(t, err)
-		assert.Equal(t, err, ErrInternal)
+		assert.Equal(t, err, ErrNotFound)
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
+
+	t.Run("Error Internal RowsAffected", func(t *testing.T) {
+		mock.ExpectPrepare(regexp.QuoteMeta(query)).ExpectExec().WillReturnResult(sqlmock.NewErrorResult(ErrDatabaseNotFound))
+
+		err := rep.Delete(1)
+
+		//aca me quede
+		assert.Error(t, err)
+		assert.Equal(t, ErrDatabaseNotFound,err)
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 }
