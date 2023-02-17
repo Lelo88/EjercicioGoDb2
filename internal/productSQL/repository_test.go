@@ -250,7 +250,7 @@ func TestRepositoryCreate(t *testing.T){
 		product := domain.Product{Name: "Milanesa", Quantity: 10, CodeValue: "12345", IsPublished: true, Expiration: "2023/12/12", Price: 12.2}
 		//expected :=1 
 
-		mock.ExpectPrepare(regexp.QuoteMeta(query)).ExpectExec().WithArgs(product.Name, product.Quantity, product.CodeValue, product.IsPublished, product.Expiration, product.Price).WillReturnResult(sqlmock.NewResult(1,1,))
+		mock.ExpectPrepare(regexp.QuoteMeta(query)).ExpectExec().WithArgs(product.Name, product.Quantity, product.CodeValue, product.IsPublished, product.Expiration, product.Price).WillReturnResult(sqlmock.NewResult(1,1))
 	
 		rep := NewSQLRepository(db)
 		
