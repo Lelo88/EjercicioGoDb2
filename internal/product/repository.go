@@ -23,7 +23,7 @@ type repository struct {
 }
 
 // NewRepository crea un nuevo repositorio
-func NewRepository(storage store.StoreInterface) Repository {
+func NewRepository(storage store.StoreInterface) *repository {
 	return &repository{storage}
 }
 
