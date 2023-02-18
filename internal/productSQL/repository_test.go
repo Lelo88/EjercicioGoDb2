@@ -216,7 +216,7 @@ func TestRepository_Delete(t *testing.T) {
 	})
 
 	t.Run("Error Internal RowsAffected", func(t *testing.T) {
-		mock.ExpectPrepare(regexp.QuoteMeta(query)).ExpectExec().WithArgs(1).WillReturnResult(sqlmock.NewResult(1,0))
+		mock.ExpectPrepare(regexp.QuoteMeta(query)).ExpectExec().WithArgs(1).WillReturnResult(sqlmock.NewResult(1, 0))
 
 		err := rep.Delete(1)
 
@@ -233,12 +233,12 @@ func TestRepository_Delete(t *testing.T) {
 
 		//aca me quede
 		assert.Error(t, err)
-		assert.Equal(t, ErrDatabaseNotFound,err)
+		assert.Equal(t, ErrDatabaseNotFound, err)
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 }
 
-func TestRepositoryCreate(t *testing.T){
+func TestRepositoryCreate(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	assert.NoError(t, err)
 
@@ -250,13 +250,14 @@ func TestRepositoryCreate(t *testing.T){
 		product := domain.Product{Name: "Milanesa", Quantity: 10, CodeValue: "12345", IsPublished: true, Expiration: "2023/12/12", Price: 12.2}
 		//expected :=1 
 
-		mock.ExpectPrepare(regexp.QuoteMeta(query)).ExpectExec().WithArgs(product.Name, product.Quantity, product.CodeValue, product.IsPublished, product.Expiration, product.Price).WillReturnResult(sqlmock.NewResult(1,1))
-	
+		mock.ExpectPrepare(regexp.QuoteMeta(query)).ExpectExec().WithArgs(product.Name, product.Quantity, product.CodeValue, product.IsPublished, product.Expiration, product.Price).WillReturnResult(sqlmock.NewResult(1, 1))
+
 		rep := NewSQLRepository(db)
-		
+
 		err := rep.Create(product)
 
 		assert.NoError(t, err)
 		assert.NoError(t, mock.ExpectationsWereMet())
+		assert.True(t, true)
 	})
 }
