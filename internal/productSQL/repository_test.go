@@ -275,4 +275,19 @@ func TestRepositoryCreate(t *testing.T) {
 		assert.Equal(t, ErrInternal, err)
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
+
+	t.Run("Err Internal Exec", func(t *testing.T) {
+
+		product := domain.Product{Name: "Milanesa", Quantity: 10, CodeValue: "12345", IsPublished: true, Expiration: "2023/12/12", Price: 12.2}
+
+		mock.ExpectPrepare(regexp.QuoteMeta(query)).ExpectExec().WillReturnError(ErrDatabaseNotFound)
+
+		rep := NewSQLRepository(db)
+
+		err := rep.Create(product)
+
+		assert.Error(t, err)
+		assert.Equal(t, ErrDatabaseNotFound, err)
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
 }
