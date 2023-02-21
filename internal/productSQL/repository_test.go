@@ -262,7 +262,17 @@ func TestRepositoryCreate(t *testing.T) {
 
 	})
 
-	t.Run("Otro error, solo para ver si funciona git desktop", func(t *testing.T) {
-		
+	t.Run("Error prepare", func(t *testing.T) {
+		product := domain.Product{Name: "Milanesa", Quantity: 10, CodeValue: "12345", IsPublished: true, Expiration: "2023/12/12", Price: 12.2}
+
+		mock.ExpectPrepare(regexp.QuoteMeta(query)).WillReturnError(ErrInternal)
+
+		rep := NewSQLRepository(db)
+
+		err := rep.Create(product)
+
+		assert.Error(t, err)
+		assert.Equal(t, ErrInternal, err)
+		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 }
