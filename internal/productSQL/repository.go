@@ -67,12 +67,12 @@ func (r *repository) Create(product domain.Product) (err error) {
 	rowsAffected, err := result.RowsAffected()
 
 	if err != nil || rowsAffected != 1 {
-		return errors.New("error1")
+		return ErrInternal
 	}
 
 	id, err := result.LastInsertId()
 	if err != nil {
-		return errors.New("error3")
+		return ErrInternal
 	}
 
 	product.Id = int(id)
