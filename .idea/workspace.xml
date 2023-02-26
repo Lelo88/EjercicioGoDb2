@@ -5,11 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8a4788d7-1eff-48f5-bc0e-a8b535bee7f8" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage.out" beforeDir="false" afterPath="$PROJECT_DIR$/coverage.out" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/productSQL/repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/productSQL/repository.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/makefile" beforeDir="false" afterPath="$PROJECT_DIR$/makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/productSQL/repository_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/productSQL/repository_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,7 +68,7 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;goland.project.structure&quot;
   }
 }</component>
-  <component name="RunManager" selected="Go Test.TestRepositoryCreate/err_row_affected in github.com/Lelo88/EjercicioGoDb2/internal/productSQL">
+  <component name="RunManager" selected="Go Test.TestRepositoryCreate/error_last_id in github.com/Lelo88/EjercicioGoDb2/internal/productSQL">
     <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
       <module name="EjercicioGoDb2" />
       <working_directory value="$PROJECT_DIR$" />
@@ -81,7 +78,7 @@
       <filePath value="$PROJECT_DIR$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestRepositoryCreate/Err_Internal_Exec in github.com/Lelo88/EjercicioGoDb2/internal/productSQL" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestRepositoryCreate/err_case_1062 in github.com/Lelo88/EjercicioGoDb2/internal/productSQL" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="EjercicioGoDb2" />
       <working_directory value="$PROJECT_DIR$/internal/productSQL" />
       <root_directory value="$PROJECT_DIR$" />
@@ -90,10 +87,10 @@
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <framework value="gotest" />
-      <pattern value="^\QTestRepositoryCreate\E$/^\QErr_Internal_Exec\E$" />
+      <pattern value="^\QTestRepositoryCreate\E$/^\Qerr_case_1062\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestRepositoryCreate/Error_prepare in github.com/Lelo88/EjercicioGoDb2/internal/productSQL" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestRepositoryCreate/err_default in github.com/Lelo88/EjercicioGoDb2/internal/productSQL" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="EjercicioGoDb2" />
       <working_directory value="$PROJECT_DIR$/internal/productSQL" />
       <root_directory value="$PROJECT_DIR$" />
@@ -102,7 +99,7 @@
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <framework value="gotest" />
-      <pattern value="^\QTestRepositoryCreate\E$/^\QError_prepare\E$" />
+      <pattern value="^\QTestRepositoryCreate\E$/^\Qerr_default\E$" />
       <method v="2" />
     </configuration>
     <configuration name="TestRepositoryCreate/err_row_affected in github.com/Lelo88/EjercicioGoDb2/internal/productSQL" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -117,7 +114,7 @@
       <pattern value="^\QTestRepositoryCreate\E$/^\Qerr_row_affected\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestRepository_ReadAll/Read_All_Products in github.com/Lelo88/EjercicioGoDb2/internal/productSQL" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestRepositoryCreate/error_last_id in github.com/Lelo88/EjercicioGoDb2/internal/productSQL" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="EjercicioGoDb2" />
       <working_directory value="$PROJECT_DIR$/internal/productSQL" />
       <root_directory value="$PROJECT_DIR$" />
@@ -126,15 +123,28 @@
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <framework value="gotest" />
-      <pattern value="^\QTestRepository_ReadAll\E$/^\QRead_All_Products\E$" />
+      <pattern value="^\QTestRepositoryCreate\E$/^\Qerror_last_id\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestRepository_Exists in github.com/Lelo88/EjercicioGoDb2/internal/productSQL" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="EjercicioGoDb2" />
+      <working_directory value="$PROJECT_DIR$/internal/productSQL" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="github.com/Lelo88/EjercicioGoDb2/internal/productSQL" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestRepository_Exists\E$" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Test.TestRepositoryCreate/error_last_id in github.com/Lelo88/EjercicioGoDb2/internal/productSQL" />
         <item itemvalue="Go Test.TestRepositoryCreate/err_row_affected in github.com/Lelo88/EjercicioGoDb2/internal/productSQL" />
-        <item itemvalue="Go Test.TestRepositoryCreate/Err_Internal_Exec in github.com/Lelo88/EjercicioGoDb2/internal/productSQL" />
-        <item itemvalue="Go Test.TestRepositoryCreate/Error_prepare in github.com/Lelo88/EjercicioGoDb2/internal/productSQL" />
-        <item itemvalue="Go Test.TestRepository_ReadAll/Read_All_Products in github.com/Lelo88/EjercicioGoDb2/internal/productSQL" />
+        <item itemvalue="Go Test.TestRepositoryCreate/err_default in github.com/Lelo88/EjercicioGoDb2/internal/productSQL" />
+        <item itemvalue="Go Test.TestRepositoryCreate/err_case_1062 in github.com/Lelo88/EjercicioGoDb2/internal/productSQL" />
+        <item itemvalue="Go Test.TestRepository_Exists in github.com/Lelo88/EjercicioGoDb2/internal/productSQL" />
       </list>
     </recent_temporary>
   </component>

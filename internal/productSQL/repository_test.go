@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/Lelo88/EjercicioGoDb2/internal/domain"
+	"github.com/go-sql-driver/mysql"
 	"github.com/stretchr/testify/assert"
 	"regexp"
 	"testing"
@@ -291,6 +292,36 @@ func TestRepositoryCreate(t *testing.T) {
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 
+	t.Run("err case 1062", func(t *testing.T) {
+		product := domain.Product{Name: "Milanesa", Quantity: 10, CodeValue: "12345", IsPublished: true, Expiration: "2023/12/12", Price: 12.2}
+
+		mock.ExpectPrepare(regexp.QuoteMeta(query)).ExpectExec().WillReturnError(&mysql.MySQLError{Number: 1062})
+
+		rep := NewSQLRepository(db)
+
+		err := rep.Create(product)
+
+		assert.Error(t, err)
+		assert.Equal(t, ErrDuplicate, err)
+		//assert.Equal(t, 0)
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
+
+	t.Run("err default", func(t *testing.T) {
+		product := domain.Product{Name: "Milanesa", Quantity: 10, CodeValue: "12345", IsPublished: true, Expiration: "2023/12/12", Price: 12.2}
+
+		mock.ExpectPrepare(regexp.QuoteMeta(query)).ExpectExec().WillReturnError(&mysql.MySQLError{Number: 0})
+
+		rep := NewSQLRepository(db)
+
+		err := rep.Create(product)
+
+		assert.Error(t, err)
+		assert.Equal(t, ErrInternal, err)
+		//assert.Equal(t, 0)
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
+
 	t.Run("err row affected", func(t *testing.T) {
 
 		product := domain.Product{Name: "Milanesa", Quantity: 10, CodeValue: "12345", IsPublished: true, Expiration: "2023/12/12", Price: 12.2}
@@ -306,4 +337,44 @@ func TestRepositoryCreate(t *testing.T) {
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 
+	t.Run("error last id", func(t *testing.T) {
+		product := domain.Product{Name: "Milanesa", Quantity: 10, CodeValue: "12345", IsPublished: true, Expiration: "2023/12/12", Price: 12.2}
+
+		mock.ExpectPrepare(regexp.QuoteMeta(query)).ExpectExec().WithArgs(product.Name, product.Quantity, product.CodeValue, product.IsPublished, product.Expiration, product.Price).WillReturnResult(sqlmock.NewErrorResult(sql.ErrNoRows))
+
+		rep := NewSQLRepository(db)
+
+		err := rep.Create(product)
+
+		assert.Error(t, err)
+		assert.Equal(t, ErrInternal, err)
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
+
+}
+
+func TestRepository_Exists(t *testing.T) {
+
+	db, mock, err := sqlmock.New()
+	assert.NoError(t, err)
+	defer db.Close()
+
+	row := mock.NewRows([]string{"code_value"})
+	row.AddRow(1)
+
+	query := "SELECT code_value FROM products WHERE code_value=?;"
+
+	mock.ExpectQuery(regexp.QuoteMeta(query)).WithArgs("abc").WillReturnRows(row)
+
+	rep := NewSQLRepository(db)
+
+	result := rep.Exists("abc")
+
+	assert.NoError(t, err)
+	assert.Equal(t, true, result)
+	assert.NoError(t, mock.ExpectationsWereMet())
+}
+
+func TestRepository_Update(t *testing.T) {
+	
 }
