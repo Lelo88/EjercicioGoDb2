@@ -6,8 +6,9 @@ test:
 .PHONY: test-cover
 test-cover:
 	@echo "=> Running tests and generating report"
-	@go test ./... -covermode=atomic -coverprofile=./coverage.out -coverpkg=./... -count=1
+	@go test ./... -cover -coverprofile=coverage.out
 	@go tool cover -html=./coverage.out
+	@rm coverage.out
 
 .PHONY:
 golangci-lint:

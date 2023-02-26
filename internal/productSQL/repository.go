@@ -13,7 +13,7 @@ type Repository interface {
 	Create(product domain.Product) error
 	Read(id int) (domain.Product, error)
 	ReadAll() ([]domain.Product, error)
-	Exists(code_value string) bool
+	Exists(codevalue string) bool
 	Delete(id int) error
 	Update(product domain.Product) error
 }
@@ -80,11 +80,11 @@ func (r *repository) Create(product domain.Product) (err error) {
 	return
 }
 
-func (r *repository) Exists(code_value string) bool {
+func (r *repository) Exists(codevalue string) bool {
 
 	query := "SELECT code_value FROM products WHERE code_value=?;"
-	row := r.db.QueryRow(query, code_value)
-	err := row.Scan(&code_value)
+	row := r.db.QueryRow(query, codevalue)
+	err := row.Scan(&codevalue)
 	return err == nil
 
 }
