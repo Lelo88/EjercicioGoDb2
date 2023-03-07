@@ -338,13 +338,17 @@ func TestRepositoryCreate(t *testing.T) {
 	})
 
 	t.Run("error last id", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.NoError(t, err)
+		defer db.Close()
+
 		product := domain.Product{Name: "Milanesa", Quantity: 10, CodeValue: "12345", IsPublished: true, Expiration: "2023/12/12", Price: 12.2}
 
-		mock.ExpectPrepare(regexp.QuoteMeta(query)).ExpectExec().WithArgs(product.Name, product.Quantity, product.CodeValue, product.IsPublished, product.Expiration, product.Price).WillReturnResult(sqlmock.NewErrorResult(sql.ErrNoRows))
+		mock.ExpectPrepare(regexp.QuoteMeta(query)).ExpectExec().WillReturnResult(sqlmock.NewErrorResult(sql.ErrNoRows))
 
 		rep := NewSQLRepository(db)
 
-		err := rep.Create(product)
+		err = rep.Create(product)
 
 		assert.Error(t, err)
 		assert.Equal(t, ErrInternal, err)
@@ -376,5 +380,5 @@ func TestRepository_Exists(t *testing.T) {
 }
 
 func TestRepository_Update(t *testing.T) {
-	
+
 }
