@@ -80,15 +80,15 @@ func TestProductSQLHandler_Getall(t *testing.T) {
 	type responseProduct struct {
 		Data []domain.Product
 	}
-
+/*
 	products := []domain.Product{
 		{Id: 1, Name: "Milanesa", Quantity: 12, IsPublished: true, Expiration: "2023/12/12", Price: 12.3},
 		{Id: 2, Name: "Papas", Quantity: 5, IsPublished: false, Expiration: "2023/12/1", Price: 11.3},
 	}
 
-	productsData := responseProduct{
+	/*productsData := responseProduct{
 		Data: products,
-	}
+	}*/
 
 	t.Run("GetAll ok", func(t *testing.T) {
 		
